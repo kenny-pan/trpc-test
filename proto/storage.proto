@@ -1,0 +1,42 @@
+// This is a Protocol Buffers file used by trpc-go to define the StorageService API.
+// It defines two RPC methods: Store (to store key-value pairs) and Fetch (to retrieve values).
+// The messages define the request and response formats for these methods.
+
+syntax = "proto3"; // Specifies that we are using Protocol Buffers version 3.
+
+package trpc.example.storage; // Declares the package name used in generated Go code and trpc service naming.
+// This will result in service name: trpc.example.storage.StorageService
+
+option go_package = "trpc-go-example/trpc/example/storage"; 
+// This tells protoc where to put the generated Go files, and what Go package path they should use.
+
+
+// ----- Messages (data structures used in RPC calls) -----
+
+message StoreRequest {
+  string key = 1;   // The key to store (e.g., a string identifier)
+  string value = 2; // The value to store for that key
+}
+
+message StoreResponse {
+  string status = 1; // A simple response message, like "ok" or an error status
+}
+
+message FetchRequest {
+  string key = 1; // The key to retrieve the value for
+}
+
+message FetchResponse {
+  string value = 1; // The value associated with the key, if found
+}
+
+
+// ----- RPC Service Definition -----
+
+service StorageService {
+  // Stores a key-value pair into Redis, MongoDB, and MySQL
+  rpc Store(StoreRequest) returns (StoreResponse);
+
+  // Fetches a value by key, likely from Redis or fallback store
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+}
